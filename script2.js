@@ -7,7 +7,7 @@ var moved = 5
 var mapb = [0, 500, 500, 0];
 
 var current_key = "dummy"
-
+//comment
 
 // contains all houses
 var housecontainer = [];
