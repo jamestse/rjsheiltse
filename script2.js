@@ -127,18 +127,18 @@ var zomdirection = function(){
 	console.log(zdir);
 	//Zombie decides how far to move
 	if (zdir === 'up'| zdir === 'down'){
-		if (Math.abs(ud) >= 20){
+		if (Math.abs(ud) >= zspeed){
 			zjump = zspeed;
 			};
-		if (Math.abs(ud) < 20){
+		if (Math.abs(ud) < zspeed){
 			zjump = moved;
 			};
 		};
 	if (zdir === 'left'| zdir === 'right'){
-		if (Math.abs(ld) >= 20){
+		if (Math.abs(ld) >= zspeed){
 			zjump = zspeed;
 			};
-		if (Math.abs(ld) < 20){
+		if (Math.abs(ld) < zspeed){
 			zjump = moved;
 			};
 		};
