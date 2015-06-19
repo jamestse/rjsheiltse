@@ -8,8 +8,11 @@ Need to make zombie a general class and make zdir and zjump internal variables t
 //move user distance
 var moved = 5
 
-//zombie speed
+//zombie step length
 var zspeed = 20;
+
+//miliseconds until zombie moves
+var zstep = 300;
 
 var mapb = [0, 500, 500, 0];
 
@@ -78,8 +81,8 @@ var zdir = 'down'
 var zjump = zspeed;
 
 var zomdirection = function(){
-	var tarx = $('.player').offset().left
-	var tary = $('.player').offset().top
+	var tarx = $('.player').offset().left - user.width
+	var tary = $('.player').offset().top - user.height
 	var ld = zombie.posx - tarx;
 	var ud = zombie.posy - tary;
 	console.log(ld,ud);
@@ -135,7 +138,7 @@ var zomdirection = function(){
 			zjump = zspeed;
 			};
 		if (Math.abs(ud) < zspeed){
-			zjump = moved;
+			zjump = Math.abs(ud)+1;
 			};
 		};
 	if (zdir === 'left'| zdir === 'right'){
@@ -143,7 +146,7 @@ var zomdirection = function(){
 			zjump = zspeed;
 			};
 		if (Math.abs(ld) < zspeed){
-			zjump = moved;
+			zjump = Math.abs(ld)+ 1;
 			};
 		};
 	console.log("this is zjump:",zjump);
@@ -231,7 +234,7 @@ var crtehouse = function(id1,x,y){
 
 	
 // Create some boundaries/house 
-	
+/*	
 crtehouse("house1",350,200);
 crtehouse("house2",200,400);
 crtehouse("house3",100,100);
@@ -246,7 +249,17 @@ crtehouse("ho11",100,240);
 crtehouse("ho12",100,260);
 crtehouse("ho13",100,280);
 
+crtehouse("ho15",240,120);
+crtehouse("ho16",260,140);
+crtehouse("ho17",280,160);
+crtehouse("ho81",300,180);
+crtehouse("ho19",320,200);
+crtehouse("ho110",340,220);
+crtehouse("ho111",360,240);
+crtehouse("ho112",380,260);
+crtehouse("ho113",400,280);
 
+*/
 
 
 	
@@ -366,49 +379,65 @@ var mvdown = function(div,object,mvd){
 
 
 var keylogger = function(){
-	console.log(current_key);
-	switch(current_key) {
-        case 37: 
-        console.log("left");
-        mvleft('.player',user, 5);
-        break;
+	if (game_state == true){
+		console.log(current_key);
+		switch(current_key) {
+       		case 37: 
+       		console.log("left");
+       		mvleft('.player',user, 5);
+        	break;
 
-        case 38:
-        console.log("up");
-        movup('.player',user, 5);
-        break;
+        	case 38:
+        	console.log("up");
+       		movup('.player',user, 5);
+        	break;
 
-        case 39:
-        console.log("right");
-        mvright('.player',user, 5);
-        break;
+        	case 39:
+        	console.log("right");
+        	mvright('.player',user, 5);
+        	break;
 
-        case 40:
-        console.log("down");
-        mvdown('.player',user, 5);
+        	case 40:
+        	console.log("down");
+        	mvdown('.player',user, 5);
 
-        break;
+        	break;
 
-        default: return;
-        };
+        	default: return;
+        	};
        
-        zomdirection();
-        zombiemove();
-        score += 1;
+        score += 0.5;
+        };
+    if (game_state == false){
+    	};
     	
 		
 
     };
 
+var zfunction = function(){
+	if (game_state == true){
+		zomdirection();
+		zombiemove();
+		setTimeout(function(){
+				gameover();
+				},1100);
+		};
+	if(game_state == false){
+	};
+	};
 
 
-var score_over = false;       
+
+
+var score_over = false; 
+var game_state = true;      
 
 var gameover = function(){
 	var xdif = Math.abs(zombie.posx - user.posx);
 	var ydif = Math.abs(zombie.posy - user.posy);
-	if (xdif <= 5 & ydif <= 5){
-		var endscreen = '<div id=end >Game Over?</div>'
+	if (xdif <= 10 & ydif <= 10){
+		var endscreen = '<div id=end ><a href="javascript:location.reload(true)">Game Over?</a></div>'
 		$(endscreen).appendTo('.map');
 		$('#end').css("background-color", "Black");
 		$('#end').css("position", "absolute");
@@ -422,6 +451,7 @@ var gameover = function(){
 		$('#end').css("top", "0px");
 		$('#end').css("line-height", "450px");
 		score_over = true;
+		game_state = false;
 		};
 };
 
@@ -432,10 +462,11 @@ var score = 0;
 var updatescore = function(){
 	var scoretxt = "Score: " + String(score);
 	if (score_over == false){
-		document.getElementById('score').innerHTML = scoretxt;
+		if (score % 1 == 0){
+			document.getElementById('score').innerHTML = scoretxt;
+			};
 		};
 	if (score_over == true){
-		console.log("game over");
 		};
 	
 	};
@@ -445,10 +476,14 @@ updatescore();
 
 
 $(document).ready(function(){
+		if (game_state == true){
+			setInterval(function(){
+				zfunction();
+				},zstep);
+				};
 		$(document).keydown(function(e){
 		current_key = e.which;
 		keylogger();
-		gameover();
 		updatescore();
 		});
 });
