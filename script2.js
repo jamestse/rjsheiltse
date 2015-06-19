@@ -1,4 +1,8 @@
 /* Can create houses, move the user w/ keypad houses as boundaries
+
+Need to fix boundaries to work for all player movements
+Need to make zombie a general class and make zdir and zjump internal variables to each object
+
 */
 
 //move user distance
@@ -168,7 +172,7 @@ var zombiemove = function(){
 	if (zdir == 'down'){
 		mvdown('.zombie',zombie, zjump);
 		};
-	console.log("zombie moves:", zombie.xpos, zombie.ypos);
+	console.log("zombie moves:", zombie.posx, zombie.posy);
 	};
 	
 	
@@ -257,7 +261,7 @@ var mvleft = function(div,object,mvd){
 	var offp = $(div).offset();
 	for (i=0; i in housecontainer; i++){
 		if (offp.left >= housecontainer[i].pwidth & offp.left <= housecontainer[i].pwidth){
-		if (offp.top < housecontainer[i].pheight & offp.top >= housecontainer[i].posy - 5){
+		if (offp.top < housecontainer[i].pheight & offp.top >= housecontainer[i].posy - mvd){
 			console.log("contact")
 			mvlft = false;
 			};
@@ -284,7 +288,7 @@ var mvright = function(div,object,mvd){
 	var offp = $(div).offset();
 	for (i=0; i in housecontainer; i++){
 		if (offp.left <= housecontainer[i].posx - 10 & offp.left >= housecontainer[i].posx - 10){
-		if (offp.top < housecontainer[i].pheight & offp.top >= housecontainer[i].posy - 5){
+		if (offp.top < housecontainer[i].pheight & offp.top >= housecontainer[i].posy - mvd){
 			console.log("contact")
 			mvrht = false;
 			};
@@ -308,7 +312,7 @@ var movup = function(div,object,mvd){
 	var offp = $(div).offset();
 	for (i=0; i in housecontainer; i++){
 		if (offp.top >= housecontainer[i].posy + 10 & offp.top <= housecontainer[i].posy + 10){
-			if (offp.left >= housecontainer[i].posx - moved & offp.left <= housecontainer[i].posx + moved){
+			if (offp.left >= housecontainer[i].posx - mvd & offp.left <= housecontainer[i].posx + mvd){
 			console.log("contact")
 			mvup = false;
 			};
@@ -331,8 +335,8 @@ var mvdown = function(div,object,mvd){
 	var mvdwn = true;
 	var offp = $(div).offset();
 	for (i=0; i in housecontainer; i++){
-		if (offp.top >= housecontainer[i].posy - moved - moved & offp.top <= housecontainer[i].posy){
-			if (offp.left >= housecontainer[i].posx - moved & offp.left <= housecontainer[i].posx + moved){
+		if (offp.top >= housecontainer[i].posy - 10 & offp.top <= housecontainer[i].posy){
+			if (offp.left >= housecontainer[i].posx - mvd & offp.left <= housecontainer[i].posx + mvd){
 			console.log("contact")
 			mvdwn = false;
 			};
@@ -390,19 +394,21 @@ var keylogger = function(){
        
         zomdirection();
         zombiemove();
+        score += 1;
     	
 		
 
     };
 
-var gamestate = true;
-       
+
+
+var score_over = false;       
 
 var gameover = function(){
 	var xdif = Math.abs(zombie.posx - user.posx);
 	var ydif = Math.abs(zombie.posy - user.posy);
 	if (xdif <= 5 & ydif <= 5){
-		var endscreen = '<div id=end >THE END?</div>'
+		var endscreen = '<div id=end >Game Over?</div>'
 		$(endscreen).appendTo('.map');
 		$('#end').css("background-color", "Black");
 		$('#end').css("position", "absolute");
@@ -414,13 +420,28 @@ var gameover = function(){
 		$('#end').css("left", "0px");
 		$('#end').css("text-align", "center");
 		$('#end').css("top", "0px");
-		$('#end').css("line-height", "250px");
-		gamestate = false;
+		$('#end').css("line-height", "450px");
+		score_over = true;
 		};
 };
+
+
+var score = 0;
+
+
+var updatescore = function(){
+	var scoretxt = "Score: " + String(score);
+	if (score_over == false){
+		document.getElementById('score').innerHTML = scoretxt;
+		};
+	if (score_over == true){
+		console.log("game over");
+		};
 	
-	
- 
+	};
+
+//sets initial score
+updatescore();
 
 
 $(document).ready(function(){
@@ -428,7 +449,7 @@ $(document).ready(function(){
 		current_key = e.which;
 		keylogger();
 		gameover();
-		console.log(gamestate);
+		updatescore();
 		});
 });
 	
