@@ -52,14 +52,14 @@ div{
 	position: relative
 	z-index: 3;
 	background-color: #004700;
-	left: 10px;
-	top: 10px;
+	left: 0px;
+	top: 0px;
 	padding: 0px;
 	
 	}
 	
 #score{
-	width: 200px;
+	width: 400px;
 	height: 50px;
 	background-color: white;
 	z-index: 10;
@@ -72,7 +72,9 @@ div{
 	line-height: 10px;
 	};
 	
-	
+#inst{
+	font-size: 10px;
+	};	
 	
 
 

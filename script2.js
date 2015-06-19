@@ -384,24 +384,33 @@ var keylogger = function(){
 		switch(current_key) {
        		case 37: 
        		console.log("left");
-       		mvleft('.player',user, 5);
+       		mvleft('.player',user, moved);
         	break;
 
         	case 38:
         	console.log("up");
-       		movup('.player',user, 5);
+       		movup('.player',user, moved);
         	break;
 
         	case 39:
         	console.log("right");
-        	mvright('.player',user, 5);
+        	mvright('.player',user, moved);
         	break;
 
         	case 40:
         	console.log("down");
-        	mvdown('.player',user, 5);
+        	mvdown('.player',user, moved);
 
         	break;
+        	
+        	case 32:
+        	moved = 10;
+        	setTimeout(function(){
+				moved = 5;
+				},2000);
+			break;
+        	
+        	
 
         	default: return;
         	};
@@ -461,9 +470,10 @@ var score = 0;
 
 var updatescore = function(){
 	var scoretxt = "Score: " + String(score);
+	var instructions = "<p id= 'inst' > Space: boost....   lft,rht,up,dwn: to move</p>"
 	if (score_over == false){
 		if (score % 1 == 0){
-			document.getElementById('score').innerHTML = scoretxt;
+			document.getElementById('score').innerHTML = scoretxt + instructions;
 			};
 		};
 	if (score_over == true){
