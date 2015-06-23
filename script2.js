@@ -485,6 +485,8 @@ var updatescore = function(){
 updatescore();
 
 
+
+
 $(document).ready(function(){
 		if (game_state == true){
 			setInterval(function(){
